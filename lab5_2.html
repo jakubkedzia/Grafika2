@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab5_2</title>
+    <style>
+        canvas {
+            border: 1px solid black;
+            display: block;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body>
+    <header>Lab5_2</header>
+    <nav>
+        <ul>
+            <li>
+                <a href="./index.html" target="_blank">Strona głowna</a>
+            </li>
+        </ul>
+    </nav>
+    <canvas id="canvas" width="400" height="400"></canvas>
+    <script>
+        function drawFunction(c) {
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            const xMin = -10;
+            const xMax = 10;
+            const yMin = -10;
+            const yMax = 10;
+            
+            const xScale = canvas.width / (xMax - xMin);
+            const yScale = canvas.height / (yMax - yMin);
+            
+            ctx.clearRect(0, 0, canvas.width, canvas.height); 
+            
+            ctx.strokeStyle = 'blue';
+            ctx.beginPath();
+            for (let x = xMin; x <= xMax; x += 0.01) {
+                let y = Math.sin(2 * x) * Math.cos(3 * x) + 0.5 * x - c;
+                
+                ctx.lineTo((x - xMin) * xScale, canvas.height - (y - yMin) * yScale);
+            }
+            ctx.stroke();
+            
+            // Oś X i Y
+            ctx.strokeStyle = 'black';
+            ctx.beginPath();
+            ctx.moveTo(0, canvas.height / 2);
+            ctx.lineTo(canvas.width, canvas.height / 2);
+            ctx.moveTo(canvas.width / 2, 0);
+            ctx.lineTo(canvas.width / 2, canvas.height);
+            ctx.stroke();
+        }
+
+        drawFunction(2); // Wartość c, tutaj c = 2
+    </script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab5_3</title>
+    <style>
+        canvas {
+            border: 1px solid black;
+            display: block;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body>
+    <header>Lab5_3</header>
+    <nav>
+        <ul>
+            <li>
+                <a href="./index.html" target="_blank">Strona główna</a>
+            </li>
+        </ul>
+    </nav>
+    <canvas id="PieChartCanvas" width="400" height="400"></canvas>
+    <script>
+        window.onload = function() {
+            var canvas = document.getElementById("PieChartCanvas");
+            var context = canvas.getContext("2d");
+
+            var data = [10, 30, 50, 120]; // Przykładowe dane
+            var total = data.reduce((acc, value) => acc + value, 0); // Suma wartości
+
+            var startAngle = 0; // Początkowy kąt
+            var animationDuration = 3000; // Czas trwania animacji (w milisekundach)
+            var animationStartTime = null; // Czas rozpoczęcia animacji
+
+            function drawPieChart() {
+                if (!animationStartTime) {
+                    animationStartTime = Date.now();
+                }
+
+                var currentTime = Date.now();
+                var elapsedTime = currentTime - animationStartTime;
+
+                // Obliczanie postępu animacji (wartości od 0 do 1)
+                var progress = Math.min(elapsedTime / animationDuration, 1);
+
+                // Czyszczenie płótna
+                context.clearRect(0, 0, canvas.width, canvas.height);
+
+                // Rysowanie kolejnych wycinków koła
+                var currentAngle = startAngle;
+                data.forEach((value, index) => {
+                    var sliceAngle = (2 * Math.PI * value / total) * progress;
+                    context.beginPath();
+                    context.moveTo(canvas.width / 2, canvas.height / 2);
+                    context.arc(canvas.width / 2, canvas.height / 2, Math.min(canvas.width, canvas.height) / 2, currentAngle, currentAngle + sliceAngle);
+                    context.closePath();
+                    context.fillStyle = `hsl(${(index * 60) % 360}, 100%, 50%)`;
+                    context.fill();
+                    currentAngle += sliceAngle;
+                });
+
+                // Ponowne wywołanie funkcji rysującej, jeśli animacja nie zakończyła się
+                if (progress < 1) {
+                    requestAnimationFrame(drawPieChart);
+                }
+            }
+
+            drawPieChart(); // Rozpoczęcie animacji
+        };
+    </script>
+</body>
+</html>

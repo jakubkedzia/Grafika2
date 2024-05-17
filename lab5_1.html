@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab5_1</title>
+    <style>
+        canvas {
+            border: 1px solid black;
+            display: block;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body>
+    <header>Lab5_1</header>
+    <nav>
+        <ul>
+            <li>
+                <a href="./index.html" target="_blank">Strona głowna</a>
+            </li>
+        </ul>
+    </nav>
+    <canvas id="canvas" width="800" height="400"></canvas>
+    <script>
+        function drawFunction(ctx, c) {
+            const width = ctx.canvas.width;
+            const height = ctx.canvas.height;
+            const scaleX = 20;
+            const scaleY = 40;
+
+            // Ustawienie punktu (0, 0) na środku canvasa
+            ctx.translate(width / 2, height / 2);
+
+            // Skalowanie osi
+            ctx.scale(scaleX, -scaleY);
+
+            // Rysowanie osi
+            ctx.beginPath();
+            ctx.moveTo(-width / 2 / scaleX, 0);
+            ctx.lineTo(width / 2 / scaleX, 0);
+            ctx.moveTo(0, -height / 2 / scaleY);
+            ctx.lineTo(0, height / 2 / scaleY);
+            ctx.strokeStyle = 'black';
+            ctx.lineWidth = 1 / scaleX;
+            ctx.stroke();
+
+            // Rysowanie funkcji
+            ctx.beginPath();
+            ctx.moveTo(-width / 2 / scaleX, Math.sin(-width / 2 / scaleX) + 0.5 * (-width / 2 / scaleX) - c);
+            for (let x = -width / 2 / scaleX; x <= width / 2 / scaleX; x += 0.01) {
+                const y = Math.sin(x) + 0.5 * x - c;
+                ctx.lineTo(x, y);
+            }
+            ctx.strokeStyle = 'blue';
+            ctx.lineWidth = 1 / scaleX;
+            ctx.stroke();
+        }
+
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        drawFunction(ctx, 1); // Zmienna c, tutaj wartość c = 1
+    </script>
+</body>
+</html>

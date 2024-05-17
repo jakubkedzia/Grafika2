@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab3</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        nav {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(255, 255, 255, 0.8); /* Opcjonalne tło dla lepszej widoczności */
+            padding: 10px;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .galeria {
+            position: relative;
+            width: 80%;
+            height: 80%;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+            justify-items: center;
+            align-items: center;
+        }
+
+        .foto {
+            width: 100px;
+            height: 100px;
+            transition: transform 1s, opacity 1s;
+            animation: randomize 1s ease-in-out forwards;
+        }
+
+        @keyframes randomize {
+            0% {
+                transform: translate(var(--random-x), var(--random-y)) rotate(var(--random-rotate));
+                opacity: 0;
+            }
+            100% {
+                transform: translate(0, 0) rotate(0deg);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>Lab3</header>
+    <nav>
+        <ul>
+            <li>
+                <a href="./index.html" target="_blank">Strona głowna</a>
+            </li>
+        </ul>
+    </nav>
+    <main class="">
+        <div class="content">
+            <div class="galeria">
+                <img class="foto" src="./src/pies.jpg" width="100px" height="100px" alt="Photo 1">
+                <img class="foto" src="./src/pies.jpg" width="100px" height="100px" alt="Photo 2">
+                <img class="foto" src="./src/pies.jpg" width="100px" height="100px" alt="Photo 3">
+                <img class="foto" src="./src/pies.jpg" width="100px" height="100px" alt="Photo 4">
+                <img class="foto" src="./src/pies.jpg" width="100px" height="100px" alt="Photo 5">
+                <img class="foto" src="./src/pies.jpg" width="100px" height="100px" alt="Photo 6">
+                <img class="foto" src="./src/pies.jpg" width="100px" height="100px" alt="Photo 7">
+                <img class="foto" src="./src/pies.jpg" width="100px" height="100px" alt="Photo 8">
+                <img class="foto" src="./src/pies.jpg" width="100px" height="100px" alt="Photo 9">
+                <img class="foto" src="./src/pies.jpg" width="100px" height="100px" alt="Photo 10">
+              </div> 
+        </div>      
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const photos = document.querySelectorAll('.foto');
+            const gallery = document.querySelector('.galeria');
+            const galleryWidth = gallery.clientWidth;
+            const galleryHeight = gallery.clientHeight;
+
+            photos.forEach(photo => {
+                const randomX = Math.random() * (galleryWidth - photo.clientWidth) - (galleryWidth / 2 - photo.clientWidth / 2);
+                const randomY = Math.random() * (galleryHeight - photo.clientHeight) - (galleryHeight / 2 - photo.clientHeight / 2);
+                const randomRotate = Math.random() * 360;
+
+                // Ustawienie zmiennych CSS dla losowych wartości
+                photo.style.setProperty('--random-x', `${randomX}px`);
+                photo.style.setProperty('--random-y', `${randomY}px`);
+                photo.style.setProperty('--random-rotate', `${randomRotate}deg`);
+
+                // Opcjonalnie: Opóźnienie animacji dla lepszego efektu
+                const delay = Math.random() * 0.5;
+                photo.style.animationDelay = `${delay}s`;
+            });
+        });
+    </script>
+</body>
+</html>

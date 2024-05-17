@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab5_5</title>
+    <style>
+        canvas {
+            border: 1px solid black;
+            display: block;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body>
+    <header>Lab5_5</header>
+    <nav>
+        <ul>
+            <li>
+                <a href="./index.html" target="_blank">Strona główna</a>
+            </li>
+        </ul>
+    </nav>
+    <canvas id="BarChartCanvas" width="600" height="400"></canvas>
+    <script>
+        window.onload = function() {
+            var canvas = document.getElementById("BarChartCanvas");
+            var context = canvas.getContext("2d");
+
+            // Dane do wykresu słupkowego
+            var dane_wykresu = {
+                serie: [
+                    [10, 30, 45, 24, 79],
+                    [24, 15, 33, 34, 50]
+                ],
+                etykiety: ["label 1", "label 2", "label 3", "label 4", "label 5"],
+                tytul: "Animowany wykres słupkowy",
+                type: "wykres_slupkowy"
+            };
+
+            // Funkcja rysująca animowany wykres słupkowy
+            function drawAnimatedBarChart(data) {
+                var maxBarHeight = Math.max(...data.serie.flat());
+                var animationDuration = 2000; // Czas trwania animacji (w milisekundach)
+                var animationStartTime = null; // Czas rozpoczęcia animacji
+
+                function drawBars() {
+                    if (!animationStartTime) {
+                        animationStartTime = Date.now();
+                    }
+
+                    var currentTime = Date.now();
+                    var elapsedTime = currentTime - animationStartTime;
+                    var progress = Math.min(elapsedTime / animationDuration, 1);
+
+                    // Czyszczenie płótna
+                    context.clearRect(0, 0, canvas.width, canvas.height);
+
+                    // Rysowanie słupków
+                    data.serie.forEach((serie, index) => {
+                        context.fillStyle = `hsl(${index * 60}, 100%, 50%)`;
+
+                        serie.forEach((value, i) => {
+                            var barWidth = canvas.width / (data.etykiety.length * 2);
+                            var barHeight = value * progress * (canvas.height / maxBarHeight);
+                            var x = (i + 1) * (barWidth * 2);
+                            var y = canvas.height - barHeight;
+
+                            context.fillRect(x, y, barWidth, barHeight);
+                        });
+                    });
+
+                    // Ponowne wywołanie funkcji rysującej, jeśli animacja nie zakończyła się
+                    if (progress < 1) {
+                        requestAnimationFrame(drawBars);
+                    }
+                }
+
+                drawBars(); // Rozpoczęcie animacji
+            }
+
+            drawAnimatedBarChart(dane_wykresu); // Wywołanie funkcji rysującej
+        };
+    </script>
+</body>
+</html>

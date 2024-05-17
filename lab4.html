@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab4</title>
+    <style>
+        canvas {
+            border: 1px solid black;
+            display: block;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body>
+    <header>Lab4</header>
+    <nav>
+        <ul>
+            <li>
+                <a href="./index.html" target="_blank">Strona głowna</a>
+            </li>
+        </ul>
+    </nav>
+    <canvas id="canvas1" width="800" height="200"></canvas>
+    <canvas id="canvas2" width="800" height="400"></canvas>
+    <canvas id="canvas3" width="800" height="200"></canvas>
+    <canvas id="canvas4" width="800" height="400"></canvas>
+    <script>
+        // Zadanie 1: Przebieg prostokątny
+        function drawSquareWave(ctx, width, height, amplitude, frequency) {
+            ctx.beginPath();
+            ctx.strokeStyle="red";
+            ctx.moveTo(0, amplitude);
+            for (let i = 0; i < width; i += frequency) {
+                ctx.lineTo(i, 0);
+                ctx.lineTo(i + frequency / 2, 0);
+                ctx.lineTo(i + frequency / 2, amplitude * 2);
+                ctx.lineTo(i + frequency, amplitude * 2);
+                ctx.lineTo(i + frequency, 0);
+            }
+            ctx.stroke();
+        }
+
+        // Zadanie 2: Wykres kołowy
+        function drawPieChart(ctx, data) {
+            const total = data.reduce((sum, value) => sum + value, 0);
+            let startAngle = 0;
+            data.forEach((value, index) => {
+                const sliceAngle = 2 * Math.PI * value / total;
+                const endAngle = startAngle + sliceAngle;
+
+                const gradient = ctx.createLinearGradient(0, 0, 200, 0);
+                gradient.addColorStop("0", `hsl(${index * 60}, 100%, 50%)`);
+                gradient.addColorStop("1.0", `hsl(${(index * 60 + 30) % 360}, 100%, 50%)`);
+
+                ctx.beginPath();
+                ctx.moveTo(400, 200);
+                ctx.arc(400, 200, 200, startAngle, endAngle);
+                ctx.closePath();
+
+                ctx.fillStyle = gradient;
+                ctx.fill();
+
+                startAngle = endAngle;
+            });
+        }
+
+        // Zadanie 3: Prostokąt z zaokrąglonymi rogami
+        function drawRoundedRect(ctx, x, y, width, height, radius) {
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + width - radius, y);
+            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+            ctx.lineTo(x + width, y + height - radius);
+            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+            ctx.lineTo(x + radius, y + height);
+            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+            ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo(x, y, x + radius, y);
+            ctx.closePath();
+
+            const gradient = ctx.createLinearGradient(x, y, x + width, y);
+            gradient.addColorStop("0", "red");
+            gradient.addColorStop("1.0", "blue");
+
+            ctx.fillStyle = gradient;
+            ctx.fill();
+        }
+
+        // Zadanie 4: Koło zębate
+        function drawGear(ctx, teeth, r0, r1, r2) {
+            const centerX = ctx.canvas.width / 2;
+            const centerY = ctx.canvas.height / 2;
+            const angle = Math.PI / teeth;
+            ctx.beginPath();
+            for (let i = 0; i < 2 * teeth; i++) {
+                const r = i % 2 === 0 ? r1 : r2;
+                const x = centerX + r * Math.cos(i * angle);
+                const y = centerY + r * Math.sin(i * angle);
+                if (i === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            }
+            ctx.closePath();
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, r0, 0, 2 * Math.PI);
+            ctx.stroke();
+
+            for (let i = 0; i < 5; i++) {
+                const x = centerX + r0 * Math.cos(i * 2 * Math.PI / 5);
+                const y = centerY + r0 * Math.sin(i * 2 * Math.PI / 5);
+                ctx.beginPath();
+                ctx.arc(x, y, r0 / 4, 0, 2 * Math.PI);
+                ctx.stroke();
+            }
+        }
+
+        // Rysowanie przebiegu prostokątnego
+        const canvas1 = document.getElementById('canvas1');
+        const ctx1 = canvas1.getContext('2d');
+        ctx1.strokeStyle = 'black';
+        drawSquareWave(ctx1, 800, 100, 50, 50);
+
+        // Rysowanie wykresu kołowego
+        const canvas2 = document.getElementById('canvas2');
+        const ctx2 = canvas2.getContext('2d');
+        const data = [10, 30, 50, 120];
+        drawPieChart(ctx2, data);
+
+        // Rysowanie prostokąta z zaokrąglonymi rogami
+        const canvas3 = document.getElementById('canvas3');
+        const ctx3 = canvas3.getContext('2d');
+        drawRoundedRect(ctx3, 300, 50, 200, 100, 20);
+
+        // Rysowanie koła zębatego
+        const canvas4 = document.getElementById('canvas4');
+        const ctx4 = canvas4.getContext('2d');
+        drawGear(ctx4, 20, 50, 80, 100);
+    </script>
+</body>
+</html>

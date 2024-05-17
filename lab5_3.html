@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab5_3</title>
+    <style>
+        canvas {
+            border: 1px solid black;
+            display: block;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body>
+    <header>Lab5_3</header>
+    <nav>
+        <ul>
+            <li>
+                <a href="./index.html" target="_blank">Strona głowna</a>
+            </li>
+        </ul>
+    </nav>
+    <canvas id="AnimationCanvas" width="500" height="100"></canvas>
+    <script>
+        window.onload = function() {
+            var canvas = document.getElementById("AnimationCanvas");
+            var context = canvas.getContext("2d");
+
+            // Deklaracja zmiennych podlegających zmianie podczas animacji
+            var last_time, stop, linear_speed, x_position, x_direction;
+
+            // Inicjalizacja stanu początkowego animacji
+            function initAnimation() {
+                stop = false;
+                var date = new Date();
+                last_time = date.getTime();
+
+                // Ustawienie prędkości animacji
+                linear_speed = 100; // pixels per second
+
+                // Początkowa pozycja piłki
+                x_position = canvas.width / 2;
+                x_direction = 1; // początkowy kierunek
+
+                // Inicjalizacja animacji
+                window.requestAnimationFrame(drawAnimation);
+            }
+
+            // Funkcja rysująca kolejne klatki animacji
+            function drawAnimation() {
+                // Czyszczenie płótna
+                context.clearRect(0, 0, canvas.width, canvas.height);
+
+                // Wyznaczenie upływu czasu od ostatniej klatki
+                var date = new Date();
+                var time_interval = date.getTime() - last_time;
+
+                // Wyznaczenie nowej pozycji piłki
+                x_position += linear_speed * x_direction * time_interval / 1000;
+
+                // Rysowanie piłki
+                context.beginPath();
+                context.arc(x_position, canvas.height / 2, 10, 0, Math.PI * 2);
+                context.fillStyle = "red";
+                context.fill();
+
+                // Sprawdzenie, czy piłka odbiła się od krawędzi
+                if (x_position > canvas.width - 10 || x_position < 10) {
+                    x_direction *= -1; // zmiana kierunku
+                }
+
+                // Zapamiętanie czasu ostatniej klatki
+                last_time = date.getTime();
+
+                // Ponowne wywołanie pętli animacji
+                if (!stop) window.requestAnimationFrame(drawAnimation);
+            }
+
+            // Inicjalizacja animacji
+            initAnimation();
+        };
+    </script>
+</body>
+</html>
